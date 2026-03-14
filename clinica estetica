@@ -1,0 +1,97 @@
+clinica_estetica
+│
+├── conexao.php
+├── cadastrar_cliente.php
+├── cadastrar_servico.php
+├── agendar.php
+├── listar_agendamentos.php
+└── banco.sql
+
+CREATE DATABASE clinica;
+
+USE clinica;
+
+CREATE TABLE clientes (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    telefone VARCHAR(20)
+);
+
+CREATE TABLE servicos (
+    id_servico INT AUTO_INCREMENT PRIMARY KEY,
+    nome_servico VARCHAR(100),
+    preco DECIMAL(10,2)
+);
+
+CREATE TABLE agendamentos (
+    id_agendamento INT AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT,
+    id_servico INT,
+    data_agendamento DATE,
+    horario TIME,
+
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),
+    FOREIGN KEY (id_servico) REFERENCES servicos(id_servico)
+);
+
+<?php
+
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db = "clinica";
+
+$con = mysqli_connect($host,$user,$pass,$db);
+
+if(!$con){
+    die("Erro na conexão");
+}
+
+?>
+
+<?php
+include "conexao.php";
+
+$nome = $_POST['nome'];
+$telefone = $_POST['telefone'];
+
+$sql = "INSERT INTO clientes (nome, telefone)
+VALUES ('$nome','$telefone')";
+
+mysqli_query($con,$sql);
+
+echo "Cliente cadastrado!";
+?>
+
+<?php
+include "conexao.php";
+
+$servico = $_POST['servico'];
+$preco = $_POST['preco'];
+
+$sql = "INSERT INTO servicos (nome_servico, preco)
+VALUES ('$servico','$preco')";
+
+mysqli_query($con,$sql);
+
+echo "Serviço cadastrado!";
+?>
+
+<?php
+include "conexao.php";
+
+$cliente = $_POST['cliente'];
+$servico = $_POST['servico'];
+$data = $_POST['data'];
+$horario = $_POST['horario'];
+
+$sql = "INSERT INTO agendamentos 
+(id_cliente,id_servico,data_agendamento,horario)
+VALUES ('$cliente','$servico','$data','$horario')";
+
+mysqli_query($con,$sql);
+
+echo "Agendamento realizado!";
+?>
+
+
